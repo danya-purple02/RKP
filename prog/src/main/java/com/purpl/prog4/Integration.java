@@ -1,49 +1,38 @@
-package com.purpl.lab1_j;
+package com.purpl.prog4;
+import java.io.Serializable;
 
 public final class Integration {
     private Integration() {}
 
-    public static class ResIntegral {
+    public static class ResIntegral implements Serializable {
+        public static final double MIN = 0.000001;
+        public static final double MAX = 1000000.0;
+        
         private double a;
         private double b;
         private double h;
         private Double result;
 
-        public ResIntegral(double a, double b, double h) {
+        public ResIntegral(double a, double b, double h) throws OutOfLimitException {
+            if(a < MIN || b > MAX) {
+                throw new OutOfLimitException("Неверные значения a и b - числа должно быть в диапазоне: 0,000001-1000000");
+            }
+            
             this.a = a;
             this.b = b;
             this.h = h;
         }
-        public double getA(){
-            return this.a;
-        }
-        public double getB(){
-            return this.b;
-        }
-        public double getH(){
-            return this.h;
-        }
+        public double getA() { return this.a; }
+        public double getB() { return this.b; }
+        public double getH() { return this.h; }
+        public Double getRes() { return this.result; }
         
-        public Double getRes(){
-            return this.result;
-        }
-        
-        public void setA(double num){
-            this.a = num;
-        }
-        public void setB(double num){
-            this.b = num;
-        }
-        public void setH(double num){
-            this.h = num;
-        }
-        public void setRes(double num){
-            this.result = num;
-        }
+        public void setA(double num) { this.a = num; }
+        public void setB(double num) { this.b = num; }
+        public void setH(double num) { this.h = num; }
+        public void setRes(double num) { this.result = num; }
     }
     
-        
-
     public static double integrateSin(double a, double b, double h) {
         if (!Double.isFinite(a) || !Double.isFinite(b) || !Double.isFinite(h)) {
             throw new IllegalArgumentException("Параметры должны быть конечными числами.");

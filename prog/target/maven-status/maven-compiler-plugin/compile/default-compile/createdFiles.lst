@@ -1,5 +1,6 @@
-com\purpl\lab1_j\JFrameGUI$1.class
-com\purpl\lab1_j\Integration$ResIntegral.class
-com\purpl\lab1_j\JFrameGUI.class
-com\purpl\lab1_j\Prog2_j.class
-com\purpl\lab1_j\Integration.class
+com\purpl\prog4\JFrameGUI$1.class
+com\purpl\prog4\JFrameGUI.class
+com\purpl\prog4\Integration$ResIntegral.class
+com\purpl\prog4\Integration.class
+com\purpl\prog4\OutOfLimitException.class
+com\purpl\prog4\Prog4.class

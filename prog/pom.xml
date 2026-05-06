@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.purpl</groupId>
-    <artifactId>prog2_j</artifactId>
+    <artifactId>prog4</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>com.purpl.lab1_j.Prog2_j</exec.mainClass>
+        <exec.mainClass>com.purpl.prog4.Prog4</exec.mainClass>
     </properties>
-    <name>prog2_j</name>
+    <name>prog4</name>
 </project>

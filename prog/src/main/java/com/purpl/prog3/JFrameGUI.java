@@ -1,13 +1,8 @@
-package com.purpl.prog4;
+package com.purpl.prog3;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.JFileChooser;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -70,12 +65,6 @@ public class JFrameGUI extends javax.swing.JFrame {
         jLabelMainHeader = new javax.swing.JLabel();
         jButtonClear = new javax.swing.JButton();
         jButtonFill = new javax.swing.JButton();
-        jButtonWrite = new javax.swing.JButton();
-        jButtonRead = new javax.swing.JButton();
-        jButtonWriteSer = new javax.swing.JButton();
-        jButtonReadSer = new javax.swing.JButton();
-        jLabelSerialFile = new javax.swing.JLabel();
-        jLabelNormalFile = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,63 +110,28 @@ public class JFrameGUI extends javax.swing.JFrame {
         jButtonFill.setText("Заполнить");
         jButtonFill.addActionListener(this::jButtonFillActionPerformed);
 
-        jButtonWrite.setBackground(new java.awt.Color(255, 51, 204));
-        jButtonWrite.setText("Записать");
-        jButtonWrite.addActionListener(this::jButtonWriteActionPerformed);
-
-        jButtonRead.setBackground(new java.awt.Color(255, 51, 204));
-        jButtonRead.setText("Прочитать");
-        jButtonRead.addActionListener(this::jButtonReadActionPerformed);
-
-        jButtonWriteSer.setBackground(new java.awt.Color(255, 51, 204));
-        jButtonWriteSer.setText("Записать");
-        jButtonWriteSer.addActionListener(this::jButtonWriteSerActionPerformed);
-
-        jButtonReadSer.setBackground(new java.awt.Color(255, 51, 204));
-        jButtonReadSer.setText("Прочитать");
-        jButtonReadSer.addActionListener(this::jButtonReadSerActionPerformed);
-
-        jLabelSerialFile.setText("Сериализованный вид");
-
-        jLabelNormalFile.setText("Нормальный вид");
-
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelLowerLimit)
+                            .addComponent(jLabelUpperLimit)
+                            .addComponent(jLabelStep))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldLowerLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldStep, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(89, 89, 89))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addComponent(jLabelNormalFile)
-                                .addGap(54, 54, 54)
-                                .addComponent(jLabelSerialFile))
-                            .addGroup(jPanelMainLayout.createSequentialGroup()
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabelLowerLimit)
-                                    .addComponent(jLabelUpperLimit)
-                                    .addComponent(jLabelStep))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextFieldLowerLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextFieldStep, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanelMainLayout.createSequentialGroup()
-                                    .addComponent(jButtonRead, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButtonReadSer, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanelMainLayout.createSequentialGroup()
-                                    .addComponent(jButtonWrite, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(54, 54, 54)
-                                    .addComponent(jButtonWriteSer, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(18, 18, 18)))
+                        .addGap(89, 89, 89)))
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,7 +139,6 @@ public class JFrameGUI extends javax.swing.JFrame {
                         .addComponent(jButtonCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 364, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39))))
             .addGroup(jPanelMainLayout.createSequentialGroup()
@@ -209,10 +162,7 @@ public class JFrameGUI extends javax.swing.JFrame {
                     .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonFill, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37))
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldLowerLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,20 +174,9 @@ public class JFrameGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldStep, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelStep))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabelSerialFile)
-                            .addComponent(jLabelNormalFile))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonWrite, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonWriteSer, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonRead, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonReadSer, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(50, 50, 50)))
+                            .addComponent(jLabelStep)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(37, 37, 37)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -370,116 +309,6 @@ public class JFrameGUI extends javax.swing.JFrame {
         isCleared = false;
     }//GEN-LAST:event_jButtonFillActionPerformed
 
-    private void jButtonReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadActionPerformed
-        entries.clear();
-        File file = chooseFile(false, "Открыть файл", "txt", "Текстовые файлы (*.txt)");
-        if (file == null) return;
-        
-        try {
-            var list = readFile(file);
-            loadEntriesToTable(list);
-            JOptionPane.showMessageDialog(this, "Прочитано:\n" + file.getAbsolutePath());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Ошибка чтения: " + ex.getMessage());
-        }
-    }//GEN-LAST:event_jButtonReadActionPerformed
-
-    private void jButtonWriteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWriteActionPerformed
-        if(isCleared == true)
-        {
-            try
-            {
-                entries.clear();
-            }
-            catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(this,
-                "Ошибка: " + ex.getMessage(),
-                "Удаление данных", JOptionPane.WARNING_MESSAGE);
-            }
-            isCleared = false;
-        }
-        
-        if(!entries.isEmpty())
-        {
-            try 
-            {
-                File file = chooseFile(true, "Сохранить файл", "txt", "Текстовые файлы (*.txt)");
-                if (file == null) return;
-                
-                
-                writeFile(file, entries);
-                JOptionPane.showMessageDialog(this, "Файл сохранён:\n" + file.getAbsolutePath(),
-                        "Запись", JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch(Exception ex)
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Ошибка записи: " + ex.getMessage());
-            }
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this,
-                        "Ошибка записи: лист entries пуст");
-        }
-    }//GEN-LAST:event_jButtonWriteActionPerformed
-
-    private void jButtonWriteSerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWriteSerActionPerformed
-        if(isCleared == true)
-        {
-            try
-            {
-                entries.clear();
-            }
-            catch (Exception ex)
-            {
-                JOptionPane.showMessageDialog(this,
-                "Ошибка: " + ex.getMessage(),
-                "Удаление данных", JOptionPane.WARNING_MESSAGE);
-            }
-            isCleared = false;
-        }
-        
-        if(!entries.isEmpty())
-        {
-            try 
-            {
-                File file = chooseFile(true, "Сохранить файл", "txt", "Текстовые файлы (*.txt)");
-                if (file == null) return;
-                
-                
-                writeSer(file, entries);
-                JOptionPane.showMessageDialog(this, "Файл сохранён:\n" + file.getAbsolutePath(),
-                        "Запись", JOptionPane.INFORMATION_MESSAGE);
-            }
-            catch(Exception ex)
-            {
-                JOptionPane.showMessageDialog(this,
-                        "Ошибка записи: " + ex.getMessage());
-            }
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this,
-                        "Ошибка записи: лист entries пуст");
-        }
-    }//GEN-LAST:event_jButtonWriteSerActionPerformed
-
-    private void jButtonReadSerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReadSerActionPerformed
-        entries.clear();
-        File file = chooseFile(false, "Открыть файл", "txt", "Текстовые файлы (*.txt)");
-        if (file == null) return;
-        
-        try {
-            var list = readSer(file);
-            loadEntriesToTable(list);
-            JOptionPane.showMessageDialog(this, "Прочитано:\n" + file.getAbsolutePath());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Ошибка чтения: " + ex.getMessage());
-        }
-    }//GEN-LAST:event_jButtonReadSerActionPerformed
-
     private double parse(String s, String fieldName) {
         s = s.trim();
         if (s.isEmpty()) throw new IllegalArgumentException(fieldName + " не задано.");
@@ -487,167 +316,15 @@ public class JFrameGUI extends javax.swing.JFrame {
         return Double.parseDouble(s);
     }
 
-    //сохранение-чтение
-    private void writeFile(File file, ArrayList<Integration.ResIntegral> list)
-    {
-        BufferedWriter bw = null;
-        try 
-        {
-            bw = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8));
-            bw.write("Формат: a;b;h;result");
-            bw.newLine();
-            for(Integration.ResIntegral e : list)
-            {
-                String a = String.format(Locale.US, "%.10f", e.getA());
-                String b = String.format(Locale.US, "%.10f", e.getB());
-                String h = String.format(Locale.US, "%.10f", e.getH());
-                String res;
-                if(e.getRes() != null)
-                {
-                    res = String.format(Locale.US, "%.10f", e.getRes());
-                }
-                else
-                {
-                    res = "";
-                }
-                bw.write(a + ";" + b + ";" + h + ";" + res);
-                bw.newLine();
-            }
-            bw.flush();
-            bw.close();
-        }
-        catch (IOException ex) 
-        { 
-            ex.printStackTrace(); 
-        }
-    }
-    
-    private ArrayList<Integration.ResIntegral> readFile(File file)
-    {
-        ArrayList<Integration.ResIntegral> list = new ArrayList<>();
-        BufferedReader br = null;
-        try
-        {
-            br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-            String line;
-            line = br.readLine();
-            int i = 0;
-            while((line = br.readLine()) != null)
-            {
-                i++;
-                String[] p = line.split(";");
-                
-                double a = parse(p[0], "Нижняя граница");
-                double b = parse(p[1], "Верхняя граница");
-                double h = parse(p[2], "Шаг");
-                
-                Integration.ResIntegral e = new Integration.ResIntegral(a, b, h);
-                
-                if(p.length == 4)
-                {
-                    String resStr = p[3].trim();
-                    resStr = resStr.replace(',', '.');
-                    e.setRes(Double.parseDouble(resStr));
-                }
-                
-                list.add(e);
-            }
-        }
-        catch(IOException ex)
-        {
-            ex.printStackTrace();
-        }
-        catch(OutOfLimitException e)
-        {
-            e.printStackTrace();
-        }
-        return list;
-    }
 
-    private void writeSer(File file, ArrayList<Integration.ResIntegral> list)
-    {
-        ObjectOutputStream out = null;
-        
-        try
-        {
-            out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-            out.writeObject(list);
-            out.close();
-        }
-        catch(IOException ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-    
-    private ArrayList<Integration.ResIntegral> readSer(File file)
-    {
-        ObjectInputStream in = null;
-        ArrayList<Integration.ResIntegral> obj = null;
-        try
-        {
-            in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-            obj = (ArrayList<Integration.ResIntegral>)in.readObject();
-            in.close();
-            return (ArrayList<Integration.ResIntegral>) obj;
-        }
-        catch(IOException ex)
-        {
-            ex.printStackTrace();
-        }
-        catch(ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
-    }
-    
-    //работа с загруженными данными
-    private void loadEntriesToTable(ArrayList<Integration.ResIntegral> list) 
-    {
-        entries.clear();
-        entries.addAll(list);
-
-        tableModel.setRowCount(0);
-        for (Integration.ResIntegral e : entries) 
-        {
-            Object res = (e.getRes() == null) ? "" : e.getRes();
-            tableModel.addRow(new Object[]{e.getA(), e.getB(), e.getH(), res});
-        }
-
-        isCleared = false;
-        jTableVariables.clearSelection();
-    }
-    
-    private File chooseFile(boolean save, String title, String extension, String description) 
-    {
-        JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle(title);
-        fc.setFileFilter(new FileNameExtensionFilter(description, extension));
-
-        int res = save ? fc.showSaveDialog(this) : fc.showOpenDialog(this);
-        if (res != JFileChooser.APPROVE_OPTION) return null;
-
-        File f = fc.getSelectedFile();
-
-        return f;
-    }
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonCalc;
     private javax.swing.JButton jButtonClear;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonFill;
-    private javax.swing.JButton jButtonRead;
-    private javax.swing.JButton jButtonReadSer;
-    private javax.swing.JButton jButtonWrite;
-    private javax.swing.JButton jButtonWriteSer;
     private javax.swing.JLabel jLabelLowerLimit;
     private javax.swing.JLabel jLabelMainHeader;
-    private javax.swing.JLabel jLabelNormalFile;
-    private javax.swing.JLabel jLabelSerialFile;
     private javax.swing.JLabel jLabelStep;
     private javax.swing.JLabel jLabelUpperLimit;
     private javax.swing.JPanel jPanelMain;

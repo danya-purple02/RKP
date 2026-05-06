@@ -1,12 +1,11 @@
-package com.purpl.prog4;
-import java.io.Serializable;
+package com.purpl.prog3;
 
 public final class Integration {
     private Integration() {}
 
-    public static class ResIntegral implements Serializable {
-        public static final double MIN = 0.000001;
-        public static final double MAX = 1000000.0;
+    public static class ResIntegral {
+        double MIN = 0.000001;
+        double MAX = 1000000.0;
         
         private double a;
         private double b;
@@ -22,17 +21,36 @@ public final class Integration {
             this.b = b;
             this.h = h;
         }
-        public double getA() { return this.a; }
-        public double getB() { return this.b; }
-        public double getH() { return this.h; }
-        public Double getRes() { return this.result; }
+        public double getA(){
+            return this.a;
+        }
+        public double getB(){
+            return this.b;
+        }
+        public double getH(){
+            return this.h;
+        }
         
-        public void setA(double num) { this.a = num; }
-        public void setB(double num) { this.b = num; }
-        public void setH(double num) { this.h = num; }
-        public void setRes(double num) { this.result = num; }
+        public Double getRes(){
+            return this.result;
+        }
+        
+        public void setA(double num){
+            this.a = num;
+        }
+        public void setB(double num){
+            this.b = num;
+        }
+        public void setH(double num){
+            this.h = num;
+        }
+        public void setRes(double num){
+            this.result = num;
+        }
     }
     
+        
+
     public static double integrateSin(double a, double b, double h) {
         if (!Double.isFinite(a) || !Double.isFinite(b) || !Double.isFinite(h)) {
             throw new IllegalArgumentException("Параметры должны быть конечными числами.");

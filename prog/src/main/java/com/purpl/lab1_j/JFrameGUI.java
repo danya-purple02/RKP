@@ -1,6 +1,6 @@
 package com.purpl.lab1_j;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,8 +17,9 @@ public class JFrameGUI extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JFrameGUI.class.getName());
     
-    private final LinkedList<Integration.Entry> entries = new LinkedList<>();
+    private final ArrayList<Integration.ResIntegral> entries = new ArrayList<>();
     private DefaultTableModel tableModel;
+    private boolean isCleared = false;
 
     /**
      * Creates new form JFrameGUI
@@ -37,7 +38,7 @@ public class JFrameGUI extends javax.swing.JFrame {
                 
             }
         };
-        jTable2.setModel(tableModel);
+        jTableVariables.setModel(tableModel);
     }
 
     /**
@@ -49,44 +50,31 @@ public class JFrameGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jLabelMinLimit = new javax.swing.JLabel();
-        jLabelMaxLimit = new javax.swing.JLabel();
+        jPanelMain = new javax.swing.JPanel();
+        jTextFieldUpperLimit = new javax.swing.JTextField();
+        jTextFieldStep = new javax.swing.JTextField();
+        jTextFieldLowerLimit = new javax.swing.JTextField();
+        jLabelLowerLimit = new javax.swing.JLabel();
+        jLabelUpperLimit = new javax.swing.JLabel();
         jLabelStep = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableVariables = new javax.swing.JTable();
         jButtonAdd = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
         jButtonCalc = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        jLabelMainHeader = new javax.swing.JLabel();
+        jButtonClear = new javax.swing.JButton();
+        jButtonFill = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabelMinLimit.setText("Нижняя граница интегрирования:");
+        jLabelLowerLimit.setText("Нижняя граница интегрирования:");
 
-        jLabelMaxLimit.setText("Верхняя граница интегрирования:");
+        jLabelUpperLimit.setText("Верхняя граница интегрирования:");
 
         jLabelStep.setText("Шаг интегрирования:");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableVariables.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -97,7 +85,7 @@ public class JFrameGUI extends javax.swing.JFrame {
                 "Нижняя граница", "Верхняя граница", "Шаг", "Результат"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(jTableVariables);
 
         jButtonAdd.setBackground(new java.awt.Color(255, 51, 204));
         jButtonAdd.setText("Добавить");
@@ -111,68 +99,85 @@ public class JFrameGUI extends javax.swing.JFrame {
         jButtonCalc.setText("Вычислить");
         jButtonCalc.addActionListener(this::jButtonCalcActionPerformed);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel1.setText("Функция: sin(x)");
+        jLabelMainHeader.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabelMainHeader.setText("Функция: cos(x^2)");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+        jButtonClear.setBackground(new java.awt.Color(102, 255, 51));
+        jButtonClear.setText("Очистить");
+        jButtonClear.addActionListener(this::jButtonClearActionPerformed);
+
+        jButtonFill.setBackground(new java.awt.Color(102, 255, 51));
+        jButtonFill.setText("Заполнить");
+        jButtonFill.addActionListener(this::jButtonFillActionPerformed);
+
+        javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
+        jPanelMain.setLayout(jPanelMainLayout);
+        jPanelMainLayout.setHorizontalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addGap(56, 56, 56)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabelMinLimit)
-                            .addComponent(jLabelMaxLimit)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelLowerLimit)
+                            .addComponent(jLabelUpperLimit)
                             .addComponent(jLabelStep))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldLowerLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldStep, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(89, 89, 89)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(89, 89, 89)
                         .addComponent(jButtonCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 364, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addGap(494, 494, 494)
-                .addComponent(jLabel1)
+                .addComponent(jLabelMainHeader)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61)
+                .addComponent(jButtonFill, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(154, 154, 154))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        jPanelMainLayout.setVerticalGroup(
+            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelMinLimit))
+                .addComponent(jLabelMainHeader)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonClear, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFill, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldLowerLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelLowerLimit))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelMaxLimit))
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldUpperLimit, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelUpperLimit))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldStep, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabelStep)))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCalc, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -183,12 +188,12 @@ public class JFrameGUI extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanelMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -196,24 +201,39 @@ public class JFrameGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddActionPerformed
+        if(isCleared == true)
+        {
+            try
+            {
+                entries.clear();
+            }
+            catch (Exception ex)
+            {
+                JOptionPane.showMessageDialog(this,
+                "Ошибка: " + ex.getMessage(),
+                "Удаление данных", JOptionPane.WARNING_MESSAGE);
+            }
+            isCleared = false;
+        }
+        
         try {
-            double a = parse(jTextField3.getText(), "Нижняя граница");
-            double b = parse(jTextField1.getText(), "Верхняя граница");
-            double h = parse(jTextField2.getText(), "Шаг");
+            double a = parse(jTextFieldLowerLimit.getText(), "Нижняя граница");
+            double b = parse(jTextFieldUpperLimit.getText(), "Верхняя граница");
+            double h = parse(jTextFieldStep.getText(), "Шаг");
 
             if (h <= 0) throw new IllegalArgumentException("Шаг должен быть > 0.");
 
-            Integration.Entry e = new Integration.Entry(a, b, h);
+            Integration.ResIntegral e = new Integration.ResIntegral(a, b, h);
             entries.add(e);
 
             tableModel.addRow(new Object[]{a, b, h, ""});
 
-            jTextField3.setText("");
-            jTextField1.setText("");
-            jTextField2.setText("");
+            jTextFieldLowerLimit.setText("");
+            jTextFieldUpperLimit.setText("");
+            jTextFieldStep.setText("");
 
             int last = tableModel.getRowCount() - 1;
-            jTable2.setRowSelectionInterval(last, last);
+            jTableVariables.setRowSelectionInterval(last, last);
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
@@ -223,7 +243,7 @@ public class JFrameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAddActionPerformed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
-        int row = jTable2.getSelectedRow();
+        int row = jTableVariables.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this, "Выбери строку в таблице.",
                     "Удаление", JOptionPane.INFORMATION_MESSAGE);
@@ -234,7 +254,7 @@ public class JFrameGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
     private void jButtonCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcActionPerformed
-        int row = jTable2.getSelectedRow();
+        int row = jTableVariables.getSelectedRow();
         if (row < 0) {
             JOptionPane.showMessageDialog(this, "Выбери строку в таблице.",
                     "Вычисление", JOptionPane.INFORMATION_MESSAGE);
@@ -246,11 +266,11 @@ public class JFrameGUI extends javax.swing.JFrame {
             double B = parse(tableModel.getValueAt(row, 1).toString(), "Верхняя граница");
             double H = parse(tableModel.getValueAt(row, 2).toString(), "Шаг");
         
-            Integration.Entry eE = new Integration.Entry(A, B, H);
+            Integration.ResIntegral eE = new Integration.ResIntegral(A, B, H);
         
             entries.set(row, eE);
             
-            Integration.Entry e = entries.get(row);
+            Integration.ResIntegral e = entries.get(row);
             double res = Integration.integrateSin(e.getA(), e.getB(), e.getH());
             e.setRes(res);
 
@@ -261,6 +281,25 @@ public class JFrameGUI extends javax.swing.JFrame {
                     "Ошибка", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButtonCalcActionPerformed
+
+    private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
+        for (int i = tableModel.getRowCount() - 1; i >= 0; i--) 
+        {
+            tableModel.removeRow(i);
+        }
+        jTableVariables.clearSelection();
+        isCleared = true;
+    }//GEN-LAST:event_jButtonClearActionPerformed
+
+    private void jButtonFillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFillActionPerformed
+        tableModel.setRowCount(0);
+        
+        for (Integration.ResIntegral e : entries) {
+            Object res = (e.getRes() == null) ? "" : e.getRes();
+            tableModel.addRow(new Object[]{ e.getA(), e.getB(), e.getH(), res });
+        }
+        isCleared = false;
+    }//GEN-LAST:event_jButtonFillActionPerformed
 
     private double parse(String s, String fieldName) {
         s = s.trim();
@@ -273,18 +312,18 @@ public class JFrameGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonCalc;
+    private javax.swing.JButton jButtonClear;
     private javax.swing.JButton jButtonDelete;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabelMaxLimit;
-    private javax.swing.JLabel jLabelMinLimit;
+    private javax.swing.JButton jButtonFill;
+    private javax.swing.JLabel jLabelLowerLimit;
+    private javax.swing.JLabel jLabelMainHeader;
     private javax.swing.JLabel jLabelStep;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabelUpperLimit;
+    private javax.swing.JPanel jPanelMain;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTable jTableVariables;
+    private javax.swing.JTextField jTextFieldLowerLimit;
+    private javax.swing.JTextField jTextFieldStep;
+    private javax.swing.JTextField jTextFieldUpperLimit;
     // End of variables declaration//GEN-END:variables
 }

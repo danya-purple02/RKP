@@ -3,13 +3,13 @@ package com.purpl.lab1_j;
 public final class Integration {
     private Integration() {}
 
-    public static class Entry {
+    public static class ResIntegral {
         private double a;
         private double b;
         private double h;
         private Double result;
 
-        public Entry(double a, double b, double h) {
+        public ResIntegral(double a, double b, double h) {
             this.a = a;
             this.b = b;
             this.h = h;
@@ -23,7 +23,8 @@ public final class Integration {
         public double getH(){
             return this.h;
         }
-        public double getRes(){
+        
+        public Double getRes(){
             return this.result;
         }
         

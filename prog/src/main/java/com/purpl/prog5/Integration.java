@@ -1,9 +1,10 @@
-package com.purpl.prog3;
+package com.purpl.prog5;
+import java.io.Serializable;
 
-public final class Integration {
+public final class Integration{
     private Integration() {}
 
-    public static class ResIntegral {
+    public static class ResIntegral implements Serializable{
         double MIN = 0.000001;
         double MAX = 1000000.0;
         
@@ -49,8 +50,6 @@ public final class Integration {
         }
     }
     
-        
-
     public static double integrateSin(double a, double b, double h) {
         if (!Double.isFinite(a) || !Double.isFinite(b) || !Double.isFinite(h)) {
             throw new IllegalArgumentException("Параметры должны быть конечными числами.");

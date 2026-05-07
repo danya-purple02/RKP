@@ -1,4 +1,4 @@
-package com.purpl.prog5;
+package com.purpl.prog6;
 import java.io.Serializable;
 
 public final class Integration{

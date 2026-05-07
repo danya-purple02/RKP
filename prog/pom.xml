@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
-        <exec.mainClass>com.purpl.prog5.Prog5</exec.mainClass>
+        <exec.mainClass>com.purpl.prog6.Prog6</exec.mainClass>
     </properties>
-    <name>prog5</name>
+    <name>prog6</name>
 </project>

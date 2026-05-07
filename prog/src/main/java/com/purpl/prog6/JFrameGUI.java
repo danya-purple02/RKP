@@ -1,4 +1,4 @@
-package com.purpl.prog5;
+package com.purpl.prog6;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -8,6 +8,9 @@ import javax.swing.JFileChooser;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /*
@@ -32,6 +35,14 @@ public class JFrameGUI extends javax.swing.JFrame {
     private volatile boolean calcInProgress = false;
     private static final int THREAD_COUNT = 9;
 
+    private ClientUdpService udpService;
+    private final AtomicInteger requestCounter = new AtomicInteger(1000);
+    private final HashMap<Integer, Integer> requestRows = new HashMap<>();
+
+    // TODO: поменяй на IP Ubuntu Server, например "192.168.1.20".
+    private static final String SERVER_HOST = "127.0.0.1";
+    private static final int SERVER_PORT = 5000;
+
     /**
      * Creates new form JFrameGUI
      */
@@ -50,6 +61,34 @@ public class JFrameGUI extends javax.swing.JFrame {
             }
         };
         jTableVariables.setModel(tableModel);
+
+        initUdpClient();
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                if (udpService != null) {
+                    udpService.stop();
+                }
+            }
+        });
+    }
+
+    private void initUdpClient() {
+        try {
+            udpService = new ClientUdpService(this, SERVER_HOST, SERVER_PORT);
+            udpService.start();
+            udpService.registerOnServer();
+
+            JOptionPane.showMessageDialog(this,
+                    "UDP-клиент запущен на порту: " + udpService.getLocalPort(),
+                    "Сеть", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Ошибка запуска UDP-клиента: " + ex.getMessage(),
+                    "Сеть", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     /**
@@ -401,24 +440,35 @@ public class JFrameGUI extends javax.swing.JFrame {
     
     private void jButtonCalcActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcActionPerformed
         int row = jTableVariables.getSelectedRow();
+
         if (row < 0) {
             JOptionPane.showMessageDialog(this, "Выбери строку в таблице.",
                     "Вычисление", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
-        try {
-            for (int i = 0; i < THREAD_COUNT; i++) {
-                double A = parse(tableModel.getValueAt(row, 0).toString(), "Нижняя граница");
-                double B = parse(tableModel.getValueAt(row, 1).toString(), "Верхняя граница");
-                double H = parse(tableModel.getValueAt(row, 2).toString(), "Шаг");
+        if (udpService == null) {
+            JOptionPane.showMessageDialog(this,
+                    "UDP-клиент не запущен.",
+                    "Сеть", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
-                Thread t = new Thread(new IntegralCalcTask(A, B, H, row, i));
-                t.start();
-            }
+        try {
+            double A = parse(tableModel.getValueAt(row, 0).toString(), "Нижняя граница");
+            double B = parse(tableModel.getValueAt(row, 1).toString(), "Верхняя граница");
+            double H = parse(tableModel.getValueAt(row, 2).toString(), "Шаг");
+
+            int requestId = requestCounter.incrementAndGet();
+            requestRows.put(requestId, row);
+
+            tableModel.setValueAt("ожидание...", row, 3);
+
+            udpService.sendCalcRequest(requestId, A, B, H);
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this,
-                    "Ошибка вычисления: " + ex.getMessage(),
+                    "Ошибка отправки запроса: " + ex.getMessage(),
                     "Ошибка", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButtonCalcActionPerformed
@@ -721,6 +771,109 @@ public class JFrameGUI extends javax.swing.JFrame {
         File f = fc.getSelectedFile();
 
         return f;
+    }
+
+
+    public void receiveFinalResult(int requestId, double result) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            Integer row = requestRows.get(requestId);
+
+            if (row == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Получен результат для неизвестного запроса: " + requestId,
+                        "Сеть", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            tableModel.setValueAt(result, row, 3);
+
+            try {
+                double a = parse(tableModel.getValueAt(row, 0).toString(), "Нижняя граница");
+                double b = parse(tableModel.getValueAt(row, 1).toString(), "Верхняя граница");
+                double h = parse(tableModel.getValueAt(row, 2).toString(), "Шаг");
+
+                Integration.ResIntegral e = new Integration.ResIntegral(a, b, h);
+                e.setRes(result);
+
+                if (row < entries.size()) {
+                    entries.set(row, e);
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Результат получен, но не удалось обновить коллекцию: " + ex.getMessage(),
+                        "Сеть", JOptionPane.WARNING_MESSAGE);
+            }
+
+            requestRows.remove(requestId);
+        });
+    }
+
+    public void calculateServerTask(Message msg) {
+        new Thread(() -> {
+            try {
+                double result = calculatePartInThreads(msg.getA(), msg.getB(), msg.getH());
+
+                udpService.sendCalcResult(
+                        msg.getRequestId(),
+                        msg.getPartNum(),
+                        result
+                );
+
+            } catch (Exception ex) {
+                showNetworkError("Ошибка вычисления части интеграла: " + ex.getMessage());
+            }
+        }).start();
+    }
+
+    private double calculatePartInThreads(double a, double b, double h) throws Exception {
+    double[] results = new double[THREAD_COUNT];
+    CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        final int index = i;
+
+        Thread t = new Thread(() -> {
+            try {
+                System.out.println("Client thread " + index);
+
+                Integration.ResIntegral e = new Integration.ResIntegral(a, b, h);
+                double res = Integration.integrateSin(e.getA(), e.getB(), e.getH());
+
+                results[index] = res;
+
+                System.out.println("Client thread " + index
+                        + " calculated full part ["
+                        + a + "; " + b + "] = " + res);
+
+            } catch (Exception ex) {
+                System.out.println("Client thread " + index
+                        + " error: " + ex.getMessage());
+            } finally {
+                latch.countDown();
+            }
+        });
+
+        t.start();
+    }
+
+    latch.await();
+
+    return results[0];
+}
+
+    public void showNetworkError(String text) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this,
+                    text,
+                    "Сетевая ошибка", JOptionPane.WARNING_MESSAGE);
+        });
+    }
+
+    public void showNetworkStatus(String text) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            System.out.println(text);
+        });
     }
 
 

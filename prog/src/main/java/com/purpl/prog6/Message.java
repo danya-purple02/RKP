@@ -8,6 +8,9 @@ public class Message {
     public static final String TYPE_CALC_RESULT = "CALC_RESULT";
     public static final String TYPE_FINAL_RESULT = "FINAL_RESULT";
     public static final String TYPE_ERROR = "ERROR";
+    
+    public static final String TYPE_STATUS_CHECK = "STATUS_CHECK";
+    public static final String TYPE_STATUS_OK = "STATUS_OK";
 
     private final String rawText;
     private final String msgType;
@@ -79,6 +82,10 @@ public class Message {
     public boolean isError() {
         return TYPE_ERROR.equals(msgType);
     }
+    
+    public boolean isStatusCheck() {
+        return TYPE_STATUS_CHECK.equals(msgType);
+    }
 
     public static String createRegister() {
         return TYPE_REGISTER + ";0;0;0;0;0;0";
@@ -102,6 +109,16 @@ public class Message {
                 + 0 + ";"
                 + 0 + ";"
                 + result;
+    }
+    
+    public static String createStatusOk(int requestId) {
+        return TYPE_STATUS_OK + ";"
+                + requestId + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0;
     }
 
     @Override

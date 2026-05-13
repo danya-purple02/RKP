@@ -70,6 +70,11 @@ public class ClientUdpService {
         String message = Message.createCalcResult(requestId, partNum, result);
         sendToServer(message);
     }
+    
+    public void sendStatusOk(int requestId) throws IOException {
+        String message = Message.createStatusOk(requestId);
+        sendToServer(message);
+    }  
 
     private void sendToServer(String message) throws IOException {
         byte[] data = message.getBytes(StandardCharsets.UTF_8);
@@ -113,16 +118,23 @@ public class ClientUdpService {
             }
         }
     }
-
+    
     private void handleMessage(Message msg) throws Exception {
         if (msg.isRegisterOk()) {
-            gui.showNetworkStatus("Клиент зарегистрирован на сервере. UDP-порт: " + getLocalPort());
+            gui.showNetworkStatus("Клиент зарегистрирован на сервере. Локальный UDP-порт: " + getLocalPort());
+
+        } else if (msg.isStatusCheck()) {
+            sendStatusOk(msg.getRequestId());
+
         } else if (msg.isCalcTask()) {
             gui.calculateServerTask(msg);
+
         } else if (msg.isFinalResult()) {
             gui.receiveFinalResult(msg.getRequestId(), msg.getRes());
+
         } else if (msg.isError()) {
             gui.showNetworkError("Сервер вернул ошибку.");
+
         } else {
             System.out.println("unknown message type: " + msg.getMsgType());
         }

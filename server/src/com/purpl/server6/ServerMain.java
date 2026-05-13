@@ -2,8 +2,11 @@ package com.purpl.server6;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.net.SocketTimeoutException;
 
 // msgType;requestId;partNum;a;b;h;res
 // REGISTER;0;0;0;0;0;0
@@ -15,6 +18,7 @@ import java.util.HashMap;
 
 public class ServerMain {
     private static final int SERVER_PORT = 5000;
+    private static final int STATUS_CHECK_TIMEOUT_MS = 1500;
 
     private static final HashMap<Integer, CalcRequest> requests = new HashMap<>();
 
@@ -74,9 +78,9 @@ public class ServerMain {
             return;
         }
 
-        ArrayList<User> calcUsers = Register.getUsersCopy();
+        ArrayList<User> registeredUsers = Register.getUsersCopy();
 
-        if (calcUsers.isEmpty()) {
+        if (registeredUsers.isEmpty()) {
             System.out.println("no registered users for calculation\n");
             Sender.send(socket, mainUser, Message.createError());
             return;
@@ -86,6 +90,16 @@ public class ServerMain {
 
         if (requests.containsKey(requestId)) {
             System.out.println("request with this id already exists: " + requestId + "\n");
+            return;
+        }
+
+        System.out.println("checking active clients before calculation...\n");
+
+        ArrayList<User> calcUsers = checkActiveUsers(socket, requestId, registeredUsers);
+
+        if (calcUsers.isEmpty()) {
+            System.out.println("no active users for calculation\n");
+            Sender.send(socket, mainUser, Message.createError());
             return;
         }
 
@@ -101,7 +115,7 @@ public class ServerMain {
         requests.put(requestId, request);
 
         System.out.println("new calc request: " + request);
-        System.out.println("distributing task between " + calcUsers.size() + " clients...\n");
+        System.out.println("distributing task between " + calcUsers.size() + " active clients...\n");
 
         distributeTask(socket, request);
     }
@@ -182,4 +196,94 @@ public class ServerMain {
             requests.remove(request.getRequestId());
         }
     }
+
+    private static ArrayList<User> checkActiveUsers(DatagramSocket socket, int requestId, ArrayList<User> users) throws Exception {
+        ArrayList<User> activeUsers = new ArrayList<>();
+        ArrayList<User> inactiveUsers = new ArrayList<>();
+
+        String statusCheckMessage = Message.createStatusCheck(requestId);
+
+        for (User user : users) {
+            Sender.send(socket, user, statusCheckMessage);
+        }
+
+        int oldTimeout = socket.getSoTimeout();
+        socket.setSoTimeout(STATUS_CHECK_TIMEOUT_MS);
+
+        long startTime = System.currentTimeMillis();
+
+        try {
+            while (activeUsers.size() < users.size()) {
+                try {
+                    DatagramPacket packet = Recipient.receive(socket);
+                    String text = Recipient.getText(packet);
+
+                    System.out.println("status response received from "
+                            + packet.getAddress().getHostAddress()
+                            + ":"
+                            + packet.getPort()
+                            + ": "
+                            + text);
+
+                    Message msg = new Message(text);
+
+                    if (!msg.isStatusOk()) {
+                        System.out.println("not status message during status check: " + msg.getMsgType());
+                        continue;
+                    }
+
+                    if (msg.getRequestId() != requestId) {
+                        System.out.println("status ok for another request: " + msg.getRequestId());
+                        continue;
+                    }
+
+                    User user = Register.findByAddress(packet.getAddress(), packet.getPort());
+
+                    if (user == null) {
+                        System.out.println("STATUS_OK from unknown user\n");
+                        continue;
+                    }
+
+                    if (!activeUsers.contains(user)) {
+                        activeUsers.add(user);
+                        System.out.println("client is active: " + user);
+                    }
+
+                    long elapsed = System.currentTimeMillis() - startTime;
+
+                    if (elapsed >= STATUS_CHECK_TIMEOUT_MS) {
+                        break;
+                    }
+
+                } catch (SocketTimeoutException ex) {
+                    break;
+                }
+            }
+        } finally {
+            socket.setSoTimeout(oldTimeout);
+        }
+
+        for (User user : users) {
+            if (!activeUsers.contains(user)) {
+                inactiveUsers.add(user);
+            }
+        }
+
+        if (!inactiveUsers.isEmpty()) {
+            System.out.println("\ninactive clients:");
+
+            for (User user : inactiveUsers) {
+                System.out.println(user);
+            }
+
+            System.out.println();
+        }
+
+        System.out.println("active clients: " + activeUsers.size() + "/" + users.size() + "\n");
+
+        Register.removeUsers(inactiveUsers);
+
+        return activeUsers;
+    }
+
 }

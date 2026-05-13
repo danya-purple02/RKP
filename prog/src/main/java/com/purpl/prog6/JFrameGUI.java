@@ -39,8 +39,7 @@ public class JFrameGUI extends javax.swing.JFrame {
     private final AtomicInteger requestCounter = new AtomicInteger(1000);
     private final HashMap<Integer, Integer> requestRows = new HashMap<>();
 
-    // TODO: поменяй на IP Ubuntu Server, например "192.168.1.20".
-    private static final String SERVER_HOST = "127.0.0.1";
+    private static final String SERVER_HOST = "192.168.1.51";
     private static final int SERVER_PORT = 5000;
 
     /**

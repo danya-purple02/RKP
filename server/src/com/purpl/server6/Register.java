@@ -67,6 +67,17 @@ public class Register {
         return users.size();
     }
 
+    public static void removeUser(User userToRemove) {
+        users.remove(userToRemove);
+        System.out.println("client removed: " + userToRemove + "\n");
+    }
+
+    public static void removeUsers(ArrayList<User> usersToRemove) {
+        for (User user : usersToRemove) {
+            removeUser(user);
+        }
+    }
+
     public static void printUsers() {
         System.out.println("=== registered users ===");
 

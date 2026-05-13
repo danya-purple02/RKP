@@ -9,13 +9,16 @@ package com.purpl.server6;
 // FINAL_RESULT;1001;0;0;0;0;1.23456
 
 public class Message {
-    public static final String TYPE_REGISTER = "REGISTER";
+    public static final String TYPE_REGISTER = "REGISTER"; //enum
     public static final String TYPE_REGISTER_OK = "REGISTER_OK";
     public static final String TYPE_CALC_REQUEST = "CALC_REQUEST";
     public static final String TYPE_CALC_TASK = "CALC_TASK";
     public static final String TYPE_CALC_RESULT = "CALC_RESULT";
     public static final String TYPE_FINAL_RESULT = "FINAL_RESULT";
     public static final String TYPE_ERROR = "ERROR";
+
+    public static final String TYPE_STATUS_CHECK = "STATUS_CHECK";
+    public static final String TYPE_STATUS_OK = "STATUS_OK";
 
     private final String rawText;
     private final String msgType;
@@ -96,6 +99,20 @@ public class Message {
         return TYPE_ERROR + ";0;0;0;0;0;0";
     }
 
+    public boolean isStatusOk() {
+        return TYPE_STATUS_OK.equals(msgType);
+    }
+
+    public static String createStatusCheck(int requestId) {
+        return TYPE_STATUS_CHECK + ";"
+                + requestId + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0 + ";"
+                + 0;
+    }
+
     public static String createCalcTask(int requestId, int partNum, double a, double b, double h) {
         return TYPE_CALC_TASK + ";"
                 + requestId + ";"
@@ -105,6 +122,7 @@ public class Message {
                 + h + ";"
                 + 0;
     }
+
 
     public static String createFinalResult(int requestId, double result) {
         return TYPE_FINAL_RESULT + ";"
